@@ -43,6 +43,8 @@ class RedisMonitor < Scout::Plugin
       counter(:connections_per_sec, info['total_connections_received'].to_i, :per => :second)
       counter(:commands_per_sec,    info['total_commands_processed'].to_i,   :per => :second)
 
+      report("db#{option(:db)} keys" => info["db#{option(:db)}"].split(',').first.split('=').last.to_i)
+
       if info['role'] == 'slave'
         master_link_status = case info['master_link_status']
                              when 'up' then 1
